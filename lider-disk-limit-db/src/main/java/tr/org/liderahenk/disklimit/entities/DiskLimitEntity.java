@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "P_disk-limit")
-public class disk-limitEntity {
+public class DiskLimitEntity {
 	
 	// This class is auto-generated.
 	// Please follow the (table and column) naming conventions.

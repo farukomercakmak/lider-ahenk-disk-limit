@@ -17,9 +17,9 @@ import tr.org.liderahenk.lider.core.api.service.ICommandResult;
 import tr.org.liderahenk.lider.core.api.service.ICommandResultFactory;
 import tr.org.liderahenk.lider.core.api.service.enums.CommandResultStatus;
 
-public class disk-limitCommand implements ICommand {
+public class DiskLimitCommand implements ICommand {
 
-	private Logger logger = LoggerFactory.getLogger(disk-limitCommand.class);
+	private Logger logger = LoggerFactory.getLogger(DiskLimitCommand.class);
 	
 	private ICommandResultFactory resultFactory;
 	private IPluginInfo pluginInfo;

@@ -10,9 +10,9 @@ import tr.org.liderahenk.liderconsole.core.dialogs.IProfileDialog;
 import tr.org.liderahenk.liderconsole.core.exceptions.ValidationException;
 import tr.org.liderahenk.liderconsole.core.model.Profile;
 
-public class disk-limitProfileDialog implements IProfileDialog {
+public class DiskLimitProfileDialog implements IProfileDialog {
 	
-	private static final Logger logger = LoggerFactory.getLogger(disk-limitProfileDialog.class);
+	private static final Logger logger = LoggerFactory.getLogger(DiskLimitProfileDialog.class);
 	
 	@Override
 	public void init() {

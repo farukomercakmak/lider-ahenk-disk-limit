@@ -17,12 +17,12 @@ import tr.org.liderahenk.liderconsole.core.exceptions.ValidationException;
  * Task execution dialog for disk-limit plugin.
  * 
  */
-public class disk-limitTaskDialog extends DefaultTaskDialog {
+public class DiskLimitTaskDialog extends DefaultTaskDialog {
 	
-	private static final Logger logger = LoggerFactory.getLogger(disk-limitTaskDialog.class);
+	private static final Logger logger = LoggerFactory.getLogger(DiskLimitTaskDialog.class);
 	
 	// TODO do not forget to change this constructor if SingleSelectionHandler is used!
-	public disk-limitTaskDialog(Shell parentShell, Set<String> dnSet) {
+	public DiskLimitTaskDialog(Shell parentShell, Set<String> dnSet) {
 		super(parentShell, dnSet);
 	}
 

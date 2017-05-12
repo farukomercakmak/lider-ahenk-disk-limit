@@ -10,8 +10,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tr.org.liderahenk.disklimit.constants.disk-limitConstants;
-import tr.org.liderahenk.disklimit.dialogs.disk-limitProfileDialog;
+import tr.org.liderahenk.disklimit.constants.DiskLimitConstants;
+import tr.org.liderahenk.disklimit.dialogs.DiskLimitProfileDialog;
 import tr.org.liderahenk.disklimit.i18n.Messages;
 import tr.org.liderahenk.liderconsole.core.constants.LiderConstants;
 import tr.org.liderahenk.liderconsole.core.editorinput.ProfileEditorInput;
@@ -20,9 +20,9 @@ import tr.org.liderahenk.liderconsole.core.editorinput.ProfileEditorInput;
  * Profile definition handler for disk-limit plugin.
  *
  */
-public class disk-limitProfileHandler extends AbstractHandler {
+public class DiskLimitProfileHandler extends AbstractHandler {
 
-	private Logger logger = LoggerFactory.getLogger(disk-limitProfileHandler.class);
+	private Logger logger = LoggerFactory.getLogger(DiskLimitProfileHandler.class);
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
@@ -34,8 +34,8 @@ public class disk-limitProfileHandler extends AbstractHandler {
 			// profiles can be handled by Lider Console Core.
 			// We also pass our profile dialog implementation as parameter to
 			// allow the editor use it dynamically.
-			page.openEditor(new ProfileEditorInput(Messages.getString("disk-limit"), disk-limitConstants.PLUGIN_NAME, 
-					disk-limitConstants.PLUGIN_VERSION, new disk-limitProfileDialog()), 
+			page.openEditor(new ProfileEditorInput(Messages.getString("disk-limit"), DiskLimitConstants.PLUGIN_NAME, 
+					DiskLimitConstants.PLUGIN_VERSION, new DiskLimitProfileDialog()), 
 					LiderConstants.EDITORS.PROFILE_EDITOR);
 		} catch (PartInitException e) {
 			logger.error(e.getMessage(), e);
