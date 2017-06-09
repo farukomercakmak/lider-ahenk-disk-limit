@@ -29,15 +29,28 @@
 	</bean>
 
 	<!-- ICommand implementation is used to process a task execution -->
-	<service ref="disk-limitCommand" interface="tr.org.liderahenk.lider.core.api.plugin.ICommand" />
-	<bean id="disk-limitCommand" class="tr.org.liderahenk.disklimit.commands.disk-limitCommand">
+	<service ref="DiskLimitCommand">
+		<interfaces>
+			<value>tr.org.liderahenk.lider.core.api.plugin.ICommand</value>
+			<value>tr.org.liderahenk.lider.core.api.plugin.ITaskAwareCommand</value>
+		</interfaces>
+	</service>
+	
+	<bean id="DiskLimitCommand" class="tr.org.liderahenk.disklimit.commands.DiskLimitCommand">
 		<property name="resultFactory" ref="resultFactory" />
 		<property name="pluginInfo" ref="pluginInfoImpl" />
 		<property name="logService" ref="logService" />
+		<property name="pluginDao" ref="pluginDao" />
 		<property name="pluginDbService" ref="pluginDbService" />
+		<property name="mailService" ref="mailService" />
+		<property name="mailAddressDao" ref="mailAddressDao" />
+		
 	</bean>
 
 	<reference id="pluginDbService" interface="tr.org.liderahenk.lider.core.api.persistence.IPluginDbService" />
+	<reference id="pluginDao" interface="tr.org.liderahenk.lider.core.api.persistence.dao.IPluginDao" />
 	<reference id="logService" interface="tr.org.liderahenk.lider.core.api.log.IOperationLogService" />
 	<reference id="resultFactory" interface="tr.org.liderahenk.lider.core.api.service.ICommandResultFactory" />
+	<reference id="mailService"  interface="tr.org.liderahenk.lider.core.api.mail.IMailService" />
+	<reference id="mailAddressDao"  interface="tr.org.liderahenk.lider.core.api.persistence.dao.IMailAddressDao" />
 </blueprint>
