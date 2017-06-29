@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
+import org.eclipse.swt.widgets.Button;
 
 /**
  * Task execution dialog for disk-limit plugin.
@@ -39,6 +40,7 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DiskLimitTaskDialog.class);
 	private Text textDiskLimitPercentage;
+	//private Button btnCheckButtonSave;
 	
 	// TODO do not forget to change this constructor if SingleSelectionHandler is used!
 	public DiskLimitTaskDialog(Shell parentShell, Set<String> dnSet) {
@@ -54,11 +56,14 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 	@Override
 	public Control createTaskDialogArea(Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(2, false));
-		GridData  gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+		composite.setLayout(new GridLayout(1, false));
+		GridData  gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		 gd.widthHint = SWT.DEFAULT;
 		 gd.heightHint = SWT.DEFAULT;
 		composite.setLayoutData( gd);
+		
+//		btnCheckButtonSave = new Button(composite, SWT.CHECK);
+//		btnCheckButtonSave.setText(Messages.getString("SAVE"));
 		
 		
 		Label lblDiskLimit = new Label(composite, SWT.NONE);
@@ -86,7 +91,10 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 		
 		String diskLimitPercentage = textDiskLimitPercentage.getText();
 		
+		//boolean saveActive= btnCheckButtonSave.getSelection();
+		
 		map.put("DiskLimitPercentage", diskLimitPercentage );
+		map.put("SaveActive", true );
 		
 		
 		return map;

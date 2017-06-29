@@ -43,7 +43,6 @@
 		<property name="pluginDao" ref="pluginDao" />
 		<property name="pluginDbService" ref="pluginDbService" />
 		<property name="mailService" ref="mailService" />
-		<property name="mailAddressDao" ref="mailAddressDao" />
 		
 	</bean>
 
@@ -52,5 +51,4 @@
 	<reference id="logService" interface="tr.org.liderahenk.lider.core.api.log.IOperationLogService" />
 	<reference id="resultFactory" interface="tr.org.liderahenk.lider.core.api.service.ICommandResultFactory" />
 	<reference id="mailService"  interface="tr.org.liderahenk.lider.core.api.mail.IMailService" />
-	<reference id="mailAddressDao"  interface="tr.org.liderahenk.lider.core.api.persistence.dao.IMailAddressDao" />
 </blueprint>
