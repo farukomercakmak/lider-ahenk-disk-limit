@@ -40,15 +40,11 @@
 		<property name="resultFactory" ref="resultFactory" />
 		<property name="pluginInfo" ref="pluginInfoImpl" />
 		<property name="logService" ref="logService" />
-		<property name="pluginDao" ref="pluginDao" />
 		<property name="pluginDbService" ref="pluginDbService" />
-		<property name="mailService" ref="mailService" />
 		
 	</bean>
 
 	<reference id="pluginDbService" interface="tr.org.liderahenk.lider.core.api.persistence.IPluginDbService" />
-	<reference id="pluginDao" interface="tr.org.liderahenk.lider.core.api.persistence.dao.IPluginDao" />
 	<reference id="logService" interface="tr.org.liderahenk.lider.core.api.log.IOperationLogService" />
 	<reference id="resultFactory" interface="tr.org.liderahenk.lider.core.api.service.ICommandResultFactory" />
-	<reference id="mailService"  interface="tr.org.liderahenk.lider.core.api.mail.IMailService" />
 </blueprint>

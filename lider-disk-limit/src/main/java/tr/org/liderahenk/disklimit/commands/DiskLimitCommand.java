@@ -12,9 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import tr.org.liderahenk.disklimit.entities.DiskUsageEntity;
 import tr.org.liderahenk.lider.core.api.log.IOperationLogService;
-import tr.org.liderahenk.lider.core.api.mail.IMailService;
 import tr.org.liderahenk.lider.core.api.persistence.IPluginDbService;
-import tr.org.liderahenk.lider.core.api.persistence.dao.IPluginDao;
 import tr.org.liderahenk.lider.core.api.persistence.entities.ICommandExecutionResult;
 import tr.org.liderahenk.lider.core.api.plugin.ICommand;
 import tr.org.liderahenk.lider.core.api.plugin.IPluginInfo;
@@ -32,10 +30,7 @@ public class DiskLimitCommand implements ICommand, ITaskAwareCommand {
 	private IPluginInfo pluginInfo;
 	private IOperationLogService logService;
 	private IPluginDbService pluginDbService;
-	
-	private IPluginDao pluginDao;
 
-	private IMailService mailService;
 
 	@Override
 	public ICommandResult execute(ICommandContext context) {
@@ -116,10 +111,6 @@ public class DiskLimitCommand implements ICommand, ITaskAwareCommand {
 		this.pluginDbService = pluginDbService;
 	}
 
-	public IMailService getMailService() {
-		return mailService;
-	}
-
 	public ICommandResultFactory getResultFactory() {
 		return resultFactory;
 	}
@@ -135,14 +126,6 @@ public class DiskLimitCommand implements ICommand, ITaskAwareCommand {
 	public IPluginDbService getPluginDbService() {
 		return pluginDbService;
 	}
-
-	public IPluginDao getPluginDao() {
-		return pluginDao;
-	}
-
-	public void setPluginDao(IPluginDao pluginDao) {
-		this.pluginDao = pluginDao;
-	}
-
+	
 
 }

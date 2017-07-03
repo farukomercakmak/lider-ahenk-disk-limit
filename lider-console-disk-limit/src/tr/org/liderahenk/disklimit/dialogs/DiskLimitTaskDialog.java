@@ -13,24 +13,26 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import tr.org.liderahenk.disklimit.i18n.Messages;
-import tr.org.liderahenk.liderconsole.core.dialogs.DefaultTaskDialog;
-import tr.org.liderahenk.liderconsole.core.exceptions.ValidationException;
-import tr.org.liderahenk.liderconsole.core.widgets.Notifier;
-import tr.org.liderahenk.liderconsole.core.xmpp.notifications.TaskStatusNotification;
-
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
-import org.eclipse.swt.widgets.Button;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import tr.org.liderahenk.disklimit.constants.DiskLimitConstants;
+import tr.org.liderahenk.disklimit.i18n.Messages;
+import tr.org.liderahenk.liderconsole.core.constants.LiderConstants;
+import tr.org.liderahenk.liderconsole.core.dialogs.DefaultTaskDialog;
+import tr.org.liderahenk.liderconsole.core.exceptions.ValidationException;
+import tr.org.liderahenk.liderconsole.core.utils.SWTResourceManager;
+import tr.org.liderahenk.liderconsole.core.widgets.Notifier;
+import tr.org.liderahenk.liderconsole.core.xmpp.notifications.TaskStatusNotification;
 
 /**
  * Task execution dialog for disk-limit plugin.
@@ -40,6 +42,7 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DiskLimitTaskDialog.class);
 	private Text textDiskLimitPercentage;
+	private Button btnExecuteNow;
 	//private Button btnCheckButtonSave;
 	
 	// TODO do not forget to change this constructor if SingleSelectionHandler is used!
@@ -76,7 +79,8 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 		textDiskLimitPercentage.setLayoutData(gd_textDiskLimitPercentage);
 		return composite;
 	}
-
+	
+	
 	@Override
 	public void validateBeforeExecution() throws ValidationException {
 		
@@ -112,12 +116,12 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 
 	@Override
 	public String getPluginName() {
-		return "disk-limit";
+		return DiskLimitConstants.PLUGIN_NAME;
 	}
 
 	@Override
 	public String getPluginVersion() {
-		return "1.0.0";
+		return DiskLimitConstants.PLUGIN_VERSION;
 	}
 	
 	private EventHandler taskStatusNotificationHandler = new EventHandler() {
@@ -170,6 +174,10 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 	public String getMailContent() {
 		
 		return "cn={ahenk} ahenkde tanımlamış olduğunuz {limit} disk doluluk oranı aşılmıştır. Disk {usage} oranında kullanılmıştır.";
+	}
+	
+	public boolean isMailSendMust() {
+		return true;
 	}
 	
 }
