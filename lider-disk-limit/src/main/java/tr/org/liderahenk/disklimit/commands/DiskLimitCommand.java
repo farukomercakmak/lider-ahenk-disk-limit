@@ -3,8 +3,10 @@ package tr.org.liderahenk.disklimit.commands;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import tr.org.liderahenk.lider.core.api.persistence.entities.ICommandExecutionRe
 import tr.org.liderahenk.lider.core.api.plugin.ICommand;
 import tr.org.liderahenk.lider.core.api.plugin.IPluginInfo;
 import tr.org.liderahenk.lider.core.api.plugin.ITaskAwareCommand;
+import tr.org.liderahenk.lider.core.api.rest.requests.ITaskRequest;
 import tr.org.liderahenk.lider.core.api.service.ICommandContext;
 import tr.org.liderahenk.lider.core.api.service.ICommandResult;
 import tr.org.liderahenk.lider.core.api.service.ICommandResultFactory;
@@ -35,9 +38,43 @@ public class DiskLimitCommand implements ICommand, ITaskAwareCommand {
 	@Override
 	public ICommandResult execute(ICommandContext context) {
 
-		ICommandResult commandResult = resultFactory.create(CommandResultStatus.OK, new ArrayList<String>(), this);
+		 ITaskRequest req = context.getRequest();
+			
+		 Map<String, Object> parameterMap = req.getParameterMap();
+		 
+		 ObjectMapper mapper = new ObjectMapper();
+		 mapper.configure(
+				    DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-		return commandResult;
+		 try {
+			 DiskUsageEntity diskUsage = mapper.readValue(mapper.writeValueAsString(parameterMap.get("diskUsageEntity")),
+						new TypeReference<DiskUsageEntity>() {
+				});
+			
+			if(diskUsage!=null){
+					
+					if(diskUsage.getId()==null){
+						diskUsage.setCreateDate(new Date());
+						diskUsage.setAgentDn(context.getRequest().getDnList().get(0));
+						diskUsage.setOwner(req.getOwner());
+						
+						pluginDbService.save(diskUsage);
+						parameterMap.put("diskUsageEntity", diskUsage);
+						
+					}else{
+						diskUsage.setModifyDate(new Date());
+						pluginDbService.update(diskUsage);
+					}
+					
+					
+			}
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			return resultFactory.create(CommandResultStatus.ERROR, new ArrayList<String>(), this);
+		} 
+		return resultFactory.create(CommandResultStatus.OK, new ArrayList<String>(), this);
 	}
 
 	@Override
@@ -51,19 +88,26 @@ public class DiskLimitCommand implements ICommand, ITaskAwareCommand {
 
 			byte[] data = result.getResponseData();
 			
-			final Map<String, Object> responseData = new ObjectMapper().readValue(data, 0, data.length,
+			ObjectMapper mapper = new ObjectMapper();
+			
+			final Map<String, Object> responseData = mapper.readValue(data, 0, data.length,
 					new TypeReference<HashMap<String, Object>>() {
 					});
-			if((Boolean) responseData.get("SaveActive")){
-				DiskUsageEntity diskUsageEntity= new DiskUsageEntity();
-				diskUsageEntity.setAgentId(result.getAgentId());
-				diskUsageEntity.setUsage((Double) responseData.get("usage"));
-				diskUsageEntity.setCreateDate(new Date());
-				
-				pluginDbService.save(diskUsageEntity);
-			}
-
 			
+			//if(responseData.get("mail_send")!=null && (Boolean) responseData.get("mail_send")){
+				
+				DiskUsageEntity diskUsageEntity = new ObjectMapper().readValue(mapper.writeValueAsString(responseData.get("disk_limit")),
+						new TypeReference<DiskUsageEntity>() {
+				});
+				
+				
+				if(diskUsageEntity!=null && diskUsageEntity.getId()!=null){
+					
+					diskUsageEntity.setAgentId(result.getAgentId());
+					pluginDbService.update(diskUsageEntity);
+				}
+
+		//	}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

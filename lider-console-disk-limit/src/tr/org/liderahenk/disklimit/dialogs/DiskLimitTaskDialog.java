@@ -1,6 +1,9 @@
 package tr.org.liderahenk.disklimit.dialogs;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,10 +30,13 @@ import org.slf4j.LoggerFactory;
 
 import tr.org.liderahenk.disklimit.constants.DiskLimitConstants;
 import tr.org.liderahenk.disklimit.i18n.Messages;
-import tr.org.liderahenk.liderconsole.core.constants.LiderConstants;
+import tr.org.liderahenk.disklimit.model.DiskUsageEntity;
 import tr.org.liderahenk.liderconsole.core.dialogs.DefaultTaskDialog;
 import tr.org.liderahenk.liderconsole.core.exceptions.ValidationException;
-import tr.org.liderahenk.liderconsole.core.utils.SWTResourceManager;
+import tr.org.liderahenk.liderconsole.core.ldap.enums.DNType;
+import tr.org.liderahenk.liderconsole.core.rest.requests.TaskRequest;
+import tr.org.liderahenk.liderconsole.core.rest.responses.IResponse;
+import tr.org.liderahenk.liderconsole.core.rest.utils.TaskRestUtils;
 import tr.org.liderahenk.liderconsole.core.widgets.Notifier;
 import tr.org.liderahenk.liderconsole.core.xmpp.notifications.TaskStatusNotification;
 
@@ -45,9 +51,12 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 	private Button btnExecuteNow;
 	//private Button btnCheckButtonSave;
 	
+	private DiskUsageEntity diskUsageEntity;
+	
 	// TODO do not forget to change this constructor if SingleSelectionHandler is used!
 	public DiskLimitTaskDialog(Shell parentShell, Set<String> dnSet) {
 		super(parentShell, dnSet,false,true);
+		diskUsageEntity=new DiskUsageEntity();
 		subscribeEventHandler(taskStatusNotificationHandler);
 	}
 
@@ -59,9 +68,8 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 	@Override
 	public Control createTaskDialogArea(Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
+		composite.setLayout(new GridLayout(2, false));
 		GridData  gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-		 gd.widthHint = SWT.DEFAULT;
 		 gd.heightHint = SWT.DEFAULT;
 		composite.setLayoutData( gd);
 		
@@ -74,13 +82,42 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 		lblDiskLimit.setText(Messages.getString("disk_limit_percentage"));
 		
 		textDiskLimitPercentage = new Text(composite, SWT.BORDER);
-		GridData gd_textDiskLimitPercentage = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		GridData gd_textDiskLimitPercentage = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_textDiskLimitPercentage.widthHint = 135;
 		textDiskLimitPercentage.setLayoutData(gd_textDiskLimitPercentage);
+		
+		
+		getDiskUsageList();
+		
 		return composite;
 	}
 	
 	
+	private void getDiskUsageList() {
+			try {
+				TaskRequest task = new TaskRequest(new ArrayList<String>(getDnSet()), DNType.AHENK, getPluginName(),
+						getPluginVersion(), "GET_DISK_LIMIT", null, null, null, new Date());
+				
+				IResponse response = TaskRestUtils.execute(task);
+				Map<String, Object> resultMap = response.getResultMap();
+				ObjectMapper mapper = new ObjectMapper();
+
+				List<DiskUsageEntity> diskUsageEntityList = mapper.readValue(mapper.writeValueAsString(resultMap.get("diskUsageList")),
+						new TypeReference<List<DiskUsageEntity>>() {
+						});
+
+				if(diskUsageEntityList!=null && diskUsageEntityList.size()>0){
+					diskUsageEntity=diskUsageEntityList.get(0);
+					textDiskLimitPercentage.setText(Double.toString(diskUsageEntity.getLimitation()));
+				}
+
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+				Notifier.error(null, Messages.getString("ERROR_ON_LIST"));
+			}
+		
+	}
+
 	@Override
 	public void validateBeforeExecution() throws ValidationException {
 		
@@ -94,11 +131,12 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 		Map<String, Object> map = new HashMap<>();
 		
 		String diskLimitPercentage = textDiskLimitPercentage.getText();
+		diskUsageEntity.setLimitation(new Double(diskLimitPercentage));
+		
 		
 		//boolean saveActive= btnCheckButtonSave.getSelection();
 		
-		map.put("DiskLimitPercentage", diskLimitPercentage );
-		map.put("SaveActive", true );
+		map.put("diskUsageEntity", diskUsageEntity );
 		
 		
 		return map;
@@ -130,7 +168,7 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 			Job job = new Job("TASK") {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
-					monitor.beginTask("RESOURCE_USAGE", 100);
+					monitor.beginTask("GET_DISK_LIMIT", 100);
 					try {
 						TaskStatusNotification taskStatus = (TaskStatusNotification) event
 								.getProperty("org.eclipse.e4.data");

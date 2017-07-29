@@ -1,52 +1,27 @@
-package tr.org.liderahenk.disklimit.entities;
+package tr.org.liderahenk.disklimit.model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
-@Entity
-@Table(name = "P_DISK_USAGE")
 public class DiskUsageEntity {
-	
-	@Id
-	@GeneratedValue
-	@Column(name = "DISK_USAGE_ID")
+
 	private Long id;
-	
-	@Column(name = "OWNER")
+
 	private String owner;
-	
-	@Column(name = "USAGE")
+
 	private double usage;
-	
-	@Column(name = "LIMITATION")
+
 	private double limitation;
-	
-	@Column(name = "AGENT_ID")
+
 	private Long agentId;
-	
-	@Column(name = "AGENT_DN")
+
 	private String agentDn;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATE_DATE", nullable = false)
+
 	private Date createDate;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "MODIFY_DATE")
+
 	private Date modifyDate;
-	
-	@Column(name = "DELETED")
+
 	private boolean deleted = false;
-	
-	@Column(name = "UPDATED")
+
 	private boolean updated = false;
 
 	public Long getId() {
@@ -56,7 +31,6 @@ public class DiskUsageEntity {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 
 	public double getUsage() {
 		return usage;
@@ -129,6 +103,5 @@ public class DiskUsageEntity {
 	public void setUpdated(boolean updated) {
 		this.updated = updated;
 	}
-	
-	
+
 }

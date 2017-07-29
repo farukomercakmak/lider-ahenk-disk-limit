@@ -43,6 +43,15 @@
 		<property name="pluginDbService" ref="pluginDbService" />
 		
 	</bean>
+	
+	<service ref="GetDiskLimitCommand" interface="tr.org.liderahenk.lider.core.api.plugin.ICommand" />
+	<bean id="GetDiskLimitCommand" class="tr.org.liderahenk.disklimit.commands.GetDiskLimitCommand">
+		<property name="resultFactory" ref="resultFactory" />
+		<property name="pluginInfo" ref="pluginInfoImpl" />
+		<property name="logService" ref="logService" />
+		<property name="pluginDbService" ref="pluginDbService" />
+		
+	</bean>
 
 	<reference id="pluginDbService" interface="tr.org.liderahenk.lider.core.api.persistence.IPluginDbService" />
 	<reference id="logService" interface="tr.org.liderahenk.lider.core.api.log.IOperationLogService" />
