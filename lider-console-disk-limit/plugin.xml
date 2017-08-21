@@ -166,4 +166,10 @@
   	</extension>
   	
   	
+  	<extension
+         point="tr.org.liderahenk.liderconsole.core.i18n">
+         <task code="SET_DISK_LIMIT" label="%command.task" />
+        <plugin name="disk-limit" label="%plugin.label" />
+     </extension>
+  	
 </plugin>
