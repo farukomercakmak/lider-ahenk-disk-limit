@@ -188,7 +188,7 @@ public class DiskLimitTaskDialog extends DefaultTaskDialog {
 						});
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
-						Notifier.error("", Messages.getString("UNEXPECTED_ERROR_ACCESSING_RESOURCE_USAGE"));
+						Notifier.error("","Hata Oluştu");
 					}
 					monitor.worked(100);
 					monitor.done();
